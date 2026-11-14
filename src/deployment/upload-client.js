@@ -1,1 +1,2 @@
-// recovered from the accessible Vercel deployment
+// Media goes straight to the authenticated Supabase function, avoiding proxy size limits.
+async function uploadToBackend(path,options){const visitor=options.headers?.['x-visitor-id']||'',r=await fetch('/api/uploads/token',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({path,visitor})}),ticket=await r.json();if(!r.ok)throw new Error(ticket.error||'Upload unavailable');const headers=new Headers(options.headers||{});headers.set('authorization','Upload '+ticket.token);const uploaded=await fetch(ticket.url,{method:'POST',headers,body:options.body}),data=await uploaded.json();if(!uploaded.ok)throw new Error(data.error||'Upload failed');return data}
